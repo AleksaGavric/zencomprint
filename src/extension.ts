@@ -61,6 +61,11 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                     decorationsArray.push({ range });
                 }
             }
+
+            if (languageId !== 'javascript' && languageId !== 'typescript' && languageId !== 'python') {
+                vscode.window.showInformationMessage('Language not supported');
+                break;
+            }
         }
     }
 
