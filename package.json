@@ -4,6 +4,10 @@
   "description": "Hide your prints & comments. Focus on the logic.",
   "version": "0.0.1",
   "icon": "data/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AleksaGavric/zencomprint.git"
+  },
   "engines": {
     "vscode": "^1.88.0"
   },
