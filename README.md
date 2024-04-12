@@ -2,6 +2,10 @@
 
 Hides comments & prints in your code with a single click. Cut down on the noise and focus on the code.
 
+Demo:
+
+![Demo](data/demo.gif)
+
 ## Usage
 
 To toggle comments and print statements either:
