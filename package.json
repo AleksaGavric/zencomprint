@@ -1,6 +1,7 @@
 {
-  "name": "ZenComPrint",
-  "displayName": "zencomprint",
+  "name": "zencomprint",
+  "displayName": "ZenComPrint",
+  "publisher": "AleksaGavric",
   "description": "Hide your prints & comments. Focus on the logic.",
   "version": "0.0.1",
   "icon": "data/logo.png",
@@ -11,9 +12,7 @@
   "engines": {
     "vscode": "^1.88.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Formatters", "Programming Languages", "Linters"],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,12 +24,12 @@
     ],
     "keybindings": [
       {
-          "command": "zencomprint.toggleCommentsPrints",
-          "key": "ctrl+h",
-          "when": "editorTextFocus",
-          "mac": "cmd+h"
+        "command": "zencomprint.toggleCommentsPrints",
+        "key": "ctrl+h",
+        "when": "editorTextFocus",
+        "mac": "cmd+h"
       }
-  ]
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -41,14 +40,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.88.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.88.0",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.8",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "punycode": "^2.3.1"
   }
 }
