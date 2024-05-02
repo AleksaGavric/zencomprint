@@ -39,6 +39,8 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 validLanguage = true;
               case "python":
                 validLanguage = true;
+              case "al":
+                validLanguage = true;
               default:
                 break;
             }
@@ -73,6 +75,16 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                     decorationsArray.push({ range });
                 }
             }
+
+            // Handle AL single-line comments
+            if (languageId === 'al') {
+                const pythonCommentIndex = text.indexOf('//');
+                if (pythonCommentIndex !== -1) {
+                    const range = new vscode.Range(i, pythonCommentIndex, i, line.text.length);
+                    decorationsArray.push({ range });
+                }
+            }
+
             if (!validLanguage) {
               vscode.window.showInformationMessage("Language not supported");
               break;
