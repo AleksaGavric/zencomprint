@@ -13,10 +13,10 @@ export function activate(context: vscode.ExtensionContext) {
         if (!editor) {
             return;
         }
-        
+
         isActive = !isActive;
         updateTextVisibility(editor, isActive, hideDecorationType);
-        
+
         vscode.window.setStatusBarMessage(`🧘‍♂️ Prints & Comments: ${isActive ? 'ON' : 'OFF'}`);
     });
 
@@ -30,6 +30,18 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
             const line = editor.document.lineAt(i);
             const text = line.text;
             const languageId = editor.document.languageId;
+
+            let validLanguage = false;
+            switch (languageId) {
+              case "javascript":
+                validLanguage = true;
+              case "typescript":
+                validLanguage = true;
+              case "python":
+                validLanguage = true;
+              default:
+                break;
+            }
 
             // Handle different print statements based on language
             if (languageId === 'javascript' || languageId === 'typescript') {
@@ -52,7 +64,7 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 const range = new vscode.Range(i, commentIndex, i, line.text.length);
                 decorationsArray.push({ range });
             }
-            
+
             // Handle Python single-line comments
             if (languageId === 'python') {
                 const pythonCommentIndex = text.indexOf('#');
@@ -61,10 +73,9 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                     decorationsArray.push({ range });
                 }
             }
-
-            if (languageId !== 'javascript' && languageId !== 'typescript' && languageId !== 'python') {
-                vscode.window.showInformationMessage('Language not supported');
-                break;
+            if (!validLanguage) {
+              vscode.window.showInformationMessage("Language not supported");
+              break;
             }
         }
     }
@@ -72,4 +83,4 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
     editor.setDecorations(hideDecorationType, decorationsArray);
 }
 
-export function deactivate() {}
+export function deactivate() { }
