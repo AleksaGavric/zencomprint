@@ -41,6 +41,8 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 validLanguage = true;
               case "al":
                 validLanguage = true;
+            case "groovy":
+                validLanguage = true;    
               default:
                 break;
             }
@@ -52,8 +54,8 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                     const range = new vscode.Range(i, 0, i, line.text.length);
                     decorationsArray.push({ range });
                 }
-            } else if (languageId === 'python') {
-                // Hides lines containing Python print statements
+            } else if (languageId === 'python' || languageId === 'groovy') {
+                // Hides lines containing Python or Groovy print statements
                 if (text.match(/\bprint\(/)) {
                     const range = new vscode.Range(i, 0, i, line.text.length);
                     decorationsArray.push({ range });
@@ -62,7 +64,7 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
 
             // Hide comments, assuming single-line comments start with '//'
             const commentIndex = text.indexOf('//');
-            if (commentIndex !== -1 && (languageId === 'javascript' || languageId === 'typescript')) {
+            if (commentIndex !== -1 && (languageId === 'javascript' || languageId === 'typescript' || languageId === 'groovy')) {
                 const range = new vscode.Range(i, commentIndex, i, line.text.length);
                 decorationsArray.push({ range });
             }
@@ -84,7 +86,7 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                     decorationsArray.push({ range });
                 }
             }
-
+            
             if (!validLanguage) {
               vscode.window.showInformationMessage("Language not supported");
               break;
