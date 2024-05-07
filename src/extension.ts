@@ -1,12 +1,15 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Your extension "ZenComPrint" is now active!');
-
     let isActive = false;
+
+    // Initial status bar message
+    vscode.window.setStatusBarMessage(`🧘‍♂️ ZenComPrint: ${isActive ? 'ON' : 'OFF'}`);
+
     const hideDecorationType = vscode.window.createTextEditorDecorationType({
-        textDecoration: 'none; display: none;', // Hides the text entirely
+        textDecoration: 'none; display: none;', // Hides the text entirely - doesn't delete it!
     });
+
     const command = vscode.commands.registerCommand('zencomprint.toggleCommentsPrints', () => {
         const editor = vscode.window.activeTextEditor;
 
@@ -16,8 +19,14 @@ export function activate(context: vscode.ExtensionContext) {
 
         isActive = !isActive;
         updateTextVisibility(editor, isActive, hideDecorationType);
-
-        vscode.window.setStatusBarMessage(`🧘‍♂️ Prints & Comments: ${isActive ? 'ON' : 'OFF'}`);
+        vscode.window.setStatusBarMessage(`🧘‍♂️ ZenComPrint: ${isActive ? 'ON' : 'OFF'}`);
+        
+        // disable editor writeability if active
+        if (isActive) {
+            vscode.commands.executeCommand('workbench.action.files.setActiveEditorReadonlyInSession');
+        } else {
+            vscode.commands.executeCommand('workbench.action.files.setActiveEditorWriteableInSession');
+        }
     });
 
     context.subscriptions.push(command);
@@ -25,6 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hideDecorationType: vscode.TextEditorDecorationType) {
     const decorationsArray: vscode.DecorationOptions[] = [];
+
     if (isActive) {
         for (let i = 0; i < editor.document.lineCount; i++) {
             const line = editor.document.lineAt(i);
@@ -32,6 +42,7 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
             const languageId = editor.document.languageId;
 
             let validLanguage = false;
+
             switch (languageId) {
               case "javascript":
                 validLanguage = true;
@@ -47,20 +58,17 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 break;
             }
 
-            // Handle different print statements based on language
+            // Hiding prints...
             if (languageId === 'javascript' || languageId === 'typescript') {
-                // Hides lines containing JavaScript or TypeScript console.log
                 if (text.includes('console.log') || text.includes('console.error') || text.includes('console.warn')) {
                     const range = new vscode.Range(i, 0, i, line.text.length);
                     decorationsArray.push({ range });
                 }
             } else if (languageId === 'python') {
-                // Hides lines containing Python print statements
                 if (text.match(/\bprint\(/)) {
                     const range = new vscode.Range(i, 0, i, line.text.length);
                     decorationsArray.push({ range });
                 }
-                // Hides lines containing Groovy print statements
             } else if (languageId === 'groovy') {
                 if (text.match(/\b(print(ln|f)?|System\.out\.print(ln|f)?)\(/)) {
                     const range = new vscode.Range(i, 0, i, line.text.length);
@@ -68,25 +76,26 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 }
             }
 
-            // Hide comments, assuming single-line comments start with '//'
+            // Hiding comments...
             const commentIndex = text.indexOf('//');
+        
             if (commentIndex !== -1 && (languageId === 'javascript' || languageId === 'typescript' || languageId === 'groovy')) {
                 const range = new vscode.Range(i, commentIndex, i, line.text.length);
                 decorationsArray.push({ range });
             }
 
-            // Handle Python single-line comments
             if (languageId === 'python') {
-                const pythonCommentIndex = text.indexOf('#');
+                const pythonCommentIndex = text.indexOf('#'); // Python single-line comments
+
                 if (pythonCommentIndex !== -1) {
                     const range = new vscode.Range(i, pythonCommentIndex, i, line.text.length);
                     decorationsArray.push({ range });
                 }
             }
 
-            // Handle AL single-line comments
             if (languageId === 'al') {
                 const pythonCommentIndex = text.indexOf('//');
+
                 if (pythonCommentIndex !== -1) {
                     const range = new vscode.Range(i, pythonCommentIndex, i, line.text.length);
                     decorationsArray.push({ range });
@@ -94,7 +103,7 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
             }
             
             if (!validLanguage) {
-              vscode.window.showInformationMessage("Language not supported");
+              vscode.window.showInformationMessage("ZenComPrint: Language not supported (...yet!)");
               break;
             }
         }
