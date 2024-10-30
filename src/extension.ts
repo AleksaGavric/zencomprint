@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (!editor) {
             return;
         }
-
+  
         isActive = !isActive;
         updateTextVisibility(editor, isActive, hideDecorationType);
         vscode.window.setStatusBarMessage(`🧘‍♂️ ZenComPrint: ${isActive ? 'ON' : 'OFF'}`);
@@ -52,8 +52,10 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 validLanguage = true;
               case "al":
                 validLanguage = true;
-            case "groovy":
-                validLanguage = true;    
+              case "groovy":
+                validLanguage = true;
+              case "php": 
+                validLanguage = true;
               default:
                 break;
             }
@@ -74,12 +76,17 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                     const range = new vscode.Range(i, 0, i, line.text.length);
                     decorationsArray.push({ range });
                 }
+            } else if (languageId === 'php') {
+                if (text.includes('echo') || text.includes('print') || text.includes('print_r') || text.includes('var_dump')) {
+                    const range = new vscode.Range(i, 0, i, line.text.length);
+                    decorationsArray.push({ range });
+                }
             }
 
             // Hiding comments...
             const commentIndex = text.indexOf('//');
         
-            if (commentIndex !== -1 && (languageId === 'javascript' || languageId === 'typescript' || languageId === 'groovy')) {
+            if (commentIndex !== -1 && (languageId === 'javascript' || languageId === 'typescript' || languageId === 'groovy' || languageId === 'php')) {
                 const range = new vscode.Range(i, commentIndex, i, line.text.length);
                 decorationsArray.push({ range });
             }
@@ -99,6 +106,63 @@ function updateTextVisibility(editor: vscode.TextEditor, isActive: boolean, hide
                 if (pythonCommentIndex !== -1) {
                     const range = new vscode.Range(i, pythonCommentIndex, i, line.text.length);
                     decorationsArray.push({ range });
+                }
+            }
+          
+            if (languageId === 'php') { 
+                const phpCommentIndex = text.indexOf('#'); // Php single line comments
+
+                if (phpCommentIndex !== -1) { 
+                    const range = new vscode.Range(i, phpCommentIndex, i, line.text.length);
+                    decorationsArray.push({ range });
+                }
+
+                const phpCommentIndex2 = text.indexOf('/*');
+                if (phpCommentIndex2 !== -1 && text.indexOf('/**') === -1) { 
+                    const range = new vscode.Range(i, phpCommentIndex2, i, line.text.length);
+                    decorationsArray.push({ range });
+
+                    var j = i + 1
+                    var line2 = editor.document.lineAt(j);
+                    var text2 = line2.text;
+                    var phpCommentIndex2Bis = text2.indexOf('*/');
+                    while (phpCommentIndex2Bis === -1) {      
+                        const range = new vscode.Range(j, 0, j, line2.text.length);
+                        decorationsArray.push({ range });
+                        j++;
+                        line2 = editor.document.lineAt(j);
+                        text2 = line2.text;
+                        phpCommentIndex2Bis = text2.indexOf('*/');
+                        if (phpCommentIndex2Bis !== -1) { 
+                            const range = new vscode.Range(j, 0, j, line2.text.length);
+                            decorationsArray.push({ range });
+                        }
+                    }
+                }
+
+                const phpCommentIndex3 = text.indexOf('/**');
+                if (phpCommentIndex3 !== -1) { 
+                    const range = new vscode.Range(i, phpCommentIndex3, i, line.text.length);
+                    decorationsArray.push({ range });
+
+                    var j = i + 1
+                    var line2 = editor.document.lineAt(j);
+                    var text2 = line2.text;
+                    var phpCommentIndex3Bis = text2.indexOf('*');
+                    while (phpCommentIndex3Bis !== -1) {      
+                        const range = new vscode.Range(j, phpCommentIndex3Bis, j, line2.text.length);
+                        decorationsArray.push({ range });
+
+                        j++;
+                        line2 = editor.document.lineAt(j);
+                        text2 = line2.text;
+                        phpCommentIndex3Bis = text2.indexOf('*/');
+                        if (phpCommentIndex3Bis !== -1) { 
+                            const range = new vscode.Range(j, 0, j, line2.text.length);
+                            decorationsArray.push({ range });
+                        }
+                        phpCommentIndex3Bis = text2.indexOf('*');
+                    }
                 }
             }
             
