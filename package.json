@@ -12,7 +12,11 @@
   "engines": {
     "vscode": "^1.88.0"
   },
-  "categories": ["Formatters", "Programming Languages", "Linters"],
+  "categories": [
+    "Formatters",
+    "Programming Languages",
+    "Linters"
+  ],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -21,23 +25,14 @@
         "command": "zencomprint.toggleCommentsPrints",
         "title": "Hide Comments & Prints"
       }
-    ],
-    "keybindings": [
-      {
-        "command": "zencomprint.toggleCommentsPrints",
-        "key": "ctrl+h",
-        "when": "editorTextFocus",
-        "mac": "cmd+h"
-      }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "npm run compile && node --test tests/*.test.cjs"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",

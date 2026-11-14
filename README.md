@@ -1,54 +1,46 @@
-# ZenComPrint 🧘‍♂️
+# ZenComPrint
 
-Cut down on the noise and focus on the logic by **hiding comments & prints** in your code with a single shortcut.
+A VS Code extension that reduces visual noise by toggling full-line comments and standalone diagnostic-output calls. It applies editor decorations; it does not delete source text.
 
-![Demo](data/demo.gif)
+![ZenComPrint demonstration](data/demo.gif)
 
-## Supports
+## Use
 
-<div style="display: flex; justify-content: center; margin-bottom: 20px; transform: scale(1.2);">
-  <img src="https://img.shields.io/badge/-Python-blue?style=flat&logo=Python&logoColor=white" alt="Python" style="margin: 5px;"/>
-  <img src="https://img.shields.io/badge/-JavaScript-yellow?style=flat&logo=JavaScript&logoColor=black" alt="JavaScript" style="margin: 5px;"/>
-  <img src="https://img.shields.io/badge/-TypeScript-007ACC?style=flat&logo=TypeScript&logoColor=white" alt="TypeScript" style="margin: 5px;"/>
-  <img src="https://img.shields.io/badge/-AL-007ACC?style=flat&logo=AL&logoColor=white" alt="AL Programming Language" style="margin: 5px;"/>
-  <img src="https://img.shields.io/badge/-Groovy-4298B8?style=flat&logo=ApacheGroovy&logoColor=white" alt="Groovy" style="margin: 5px;"/>
-</div>
+Run **Hide Comments & Prints** from the Command Palette, or click the ZenComPrint status-bar item. Toggle state is kept per document and refreshed as visible documents change.
 
-> [!NOTE]  
-> Interested in more languages? You can contribute by opening an issue or a pull request to add supports.
+The source checkout no longer overrides `Cmd+H` or `Ctrl+H`. Assign your own shortcut to `zencomprint.toggleCommentsPrints` in Keyboard Shortcuts. The extension does not change a document's read-only state.
 
-## Features
+## Supported syntax and limits
 
-- **Toggle Comments & Prints**: Quickly hide or show comments and print statements in your code to streamline your view. Once hidden, comments and prints are still present in the file but are not displayed - making it easier to focus on the logic.
-- **Multi-Language Support**: Constantly adding more languages to support, so you can use *ZenComPrint* across all your projects.
-- **Easy Access**: Using a simple shortcut, you can toggle comments and prints on and off, making it easy to switch between views. Check the status bar for a notification on the current state.
+| Languages | Hidden lines |
+| --- | --- |
+| JavaScript / TypeScript, including React variants | Full-line `//` comments; standalone `console.log/warn/error/info/debug(...)` calls |
+| Python | Full-line `#` comments; standalone `print(...)` calls |
+| Groovy | Full-line `//` comments; standalone `print/println/printf` and `System.out` variants with parentheses |
+| PHP | Full-line `//` / `#` comments; standalone `print_r(...)` / `var_dump(...)` calls |
+| AL | Full-line `//` comments |
 
-## Installation
+This is a conservative line-based classifier, not a complete language parser. Inline comments, block comments, multiline calls and PHP `echo` remain visible. Comment-like text inside tracked multiline strings is preserved; complex language constructs may be left visible. Review source normally when editing: decorations are a viewing aid, not a transformation or access-control mechanism.
 
-To install *ZenComPrint*:
+The animation shows the original release; source improvements described here are not claimed to be published to the Marketplace.
 
-1. Open Visual Studio Code.
-2. Navigate to the Extensions view by clicking on the square icon on the sidebar, or by pressing `Ctrl+Shift+X` (Windows/Linux) or `Cmd+Shift+X` (macOS).
-3. Search for `ZenComPrint` and install.
+## Develop and verify
 
-## Usage
+Node.js 20+ and VS Code 1.88+ are the development targets.
 
-To toggle comments and print statements:
+```sh
+npm ci
+npm run compile
+npm run lint
+npm test
+```
 
-- Press `Cmd+H` (macOS) or `Ctrl+H` (Windows/Linux) to toggle comments and prints off/on.
+Press F5 in VS Code to open an Extension Development Host for manual UI testing. Automated tests exercise classification edge cases; they do not replace testing VS Code decoration rendering and editor events.
 
-*or*
+## Install
 
-- Use the command `> Hide Comments & Prints` from the command palette, accessible by pressing `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Windows/Linux).
+The existing release is available in the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AleksaGavric.zencomprint). Clone this repository for the current source.
 
-> [!NOTE]  
-> To see the current state of comments and prints, check the status bar.
+## License and contributions
 
-## Contributing
-
-This is meant to be a community-driven project, so feel free to contribute in any way you can:
-
-- **Open an issue**: If you encounter a bug or have a suggestion, let me know!
-- **Submit a pull request**: Implement a new feature or fix something and contribute directly to the project.
-
-Enjoy coding more cleanly with *ZenComPrint*!
+See [LICENCE.md](LICENCE.md). Bug reports should include a minimal source example, language mode and VS Code version.

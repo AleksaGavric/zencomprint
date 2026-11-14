@@ -1,3 +1,12 @@
+# Unreleased source improvements
+
+- Keep toggle state per document and dispose editor resources.
+- Refresh decorations after editor/document changes without modifying read-only state.
+- Use conservative line classification to avoid hiding mixed code and string content.
+- Leave block comments visible rather than scanning beyond the end of a document.
+- Remove the default Hide/Replace shortcut conflict; users can assign a shortcut.
+- Add regression tests and CI checks. These changes are not a Marketplace release.
+
 # Changelog
 
 ## [1.0.0] - 2024-05-07
